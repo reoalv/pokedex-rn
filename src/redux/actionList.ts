@@ -1,0 +1,9 @@
+export const POKEMON_LIST = {
+    GET: 'GET_POKEMON_LIST',
+    SET: 'SET_PRODUCT_LIST',
+};
+
+export const POKEMON_ALL_TYPES = {
+    GET: 'GET_POKEMON_ALL_TYPES',
+    SET: 'SET_POKEMON_ALL_TYPES',
+};
