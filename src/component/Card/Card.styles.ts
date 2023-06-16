@@ -6,7 +6,7 @@ export const styles = StyleSheet.create({
       flex: 1,
       padding: moderateScale(8),
       borderRadius: moderateScale(12),
-      marginHorizontal: moderateScale(4),
+      margin: moderateScale(4),
       alignItems: 'center'
   },
 });

@@ -1,6 +1,7 @@
 export const POKEMON_LIST = {
     GET: 'GET_POKEMON_LIST',
     SET: 'SET_PRODUCT_LIST',
+    IS_LOAD: 'LOAD_PRODUCT_LIST',
 };
 
 export const POKEMON_ALL_TYPES = {

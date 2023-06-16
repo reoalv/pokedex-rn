@@ -1,5 +1,5 @@
 import axios, {AxiosRequestConfig, Method, ResponseType} from 'axios';
-import {baseReducerType, pokemonDataListType, requestType} from './types';
+import {NameValueMap, baseReducerType, pokemonDataListType, requestType} from './types';
 
 export const BASE_URL = 'https://pokeapi.co/api/v2';
 
@@ -41,6 +41,15 @@ export const createRequest = (apiConfig: requestType) => {
   });
 };
 
+export const getQueryParam = (data: NameValueMap[]) => {
+    let tempQueryParamString = '';
+    for (const item of data) {
+      tempQueryParamString += tempQueryParamString === '' ? '?' : '&';
+      tempQueryParamString += item.name + '=' + item.value;
+    }
+    return tempQueryParamString;
+  };
+
 export const findPokemonTypes = (pokemonDataList: baseReducerType['pokemonTypeList'], pokemonName: string) => {
     const searchType =  pokemonDataList?.filter(value => {
         return value?.pokemon?.find(val => val?.pokemon?.name === pokemonName)
@@ -70,9 +79,31 @@ export const getPokemonID = (str: string) => {
     return found ? found[1] : ''; 
 }
 
-export const generateColor = () => {
-    const randomColor = Math.floor(Math.random() * 16777215)
-      .toString(16)
-      .padStart(6, '0');
-    return `#${randomColor}`;
-  };
+export const getColorOnTypes = (types: string) => {
+    switch (types) {
+        case 'normal':
+            return '#fece7a'
+        case 'poison':
+            return '#4297a0'
+        case 'fire':
+            return '#f36e31'
+        case 'flying':
+            return '#97ffff'
+        case 'water':
+            return '#0098db'
+        case 'bug':
+            return '#c6c4e1'
+        case 'electric':
+            return '#6c78d7'
+        case 'ground':
+            return '#a58360'
+        case 'fairy':
+            return '#f0595b'
+        case 'fighting':
+            return '#b43838'
+        case 'psychic':
+            return '#fab617'
+        default:
+            return '#e49987';
+    }
+}

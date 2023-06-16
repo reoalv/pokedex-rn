@@ -17,5 +17,15 @@ export const styles = StyleSheet.create({
     img: {
       height: moderateScale(100),
       width: moderateScale(100),
+    },
+    textName: {
+      fontSize: moderateScale(16),
+      fontWeight: '600',
+      color: '#ffffff'
+    },
+    footer: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: moderateScale(24),
     }
 })

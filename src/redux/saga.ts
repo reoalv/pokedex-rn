@@ -1,14 +1,49 @@
-import { put, select, takeLatest} from 'redux-saga/effects';
-import { getPokemonAllTypes, getPokemonList, setPokemonAllTypes } from './action';
-import { findPokemonTypes, getPokemonTypes } from './utils';
-import { baseReducerType, responGetTypesPokemon } from './types';
+import { call, put, select, takeLatest} from 'redux-saga/effects';
+import { getPokemonAllTypes, getPokemonList, loadPokemonList, setPokemonAllTypes, setPokemonList } from './action';
+import { BASE_URL, checkStatus, createRequest, findPokemonTypes, getColorOnTypes, getPokemonID, getPokemonTypes, getQueryParam } from './utils';
+import { NameValueMap, baseReducerType, payloadPokemonList, requestType, resPokemonList, responGetTypesPokemon } from './types';
 
-export function* fetchPokemonList() {
+export function* fetchPokemonList({payload}: {payload: payloadPokemonList}) {
   try {
+    yield put(loadPokemonList(payload.offset !== 0 ? true : false))
+    const paramsData: NameValueMap[] = [
+        {
+            name: 'limit',
+            value: 20,
+        },
+        {
+            name: 'offset',
+            value: payload.offset,
+        },
+      ];
+    const objRequest: requestType = {
+        path: `${BASE_URL}/pokemon` + getQueryParam(paramsData),
+        method: 'GET',
+      };
     const pokemonReducer: baseReducerType = yield select((state) => state?.pokemonReducers);
-    const searchPokemonTypes = findPokemonTypes(pokemonReducer?.pokemonTypeList, 'vileplume')
-    console.log('searchPokemonTypes', searchPokemonTypes)
+    const res: resPokemonList = yield call(createRequest, objRequest);
+    if (checkStatus(res?.status)) {
+        const pokemonDataMap = res?.data?.results.map(val => {
+            const namePokemon = val?.name
+            const pokemonType = findPokemonTypes(pokemonReducer?.pokemonTypeList, namePokemon)
+            const pokemonId = getPokemonID(val?.url)
 
+            return {
+                name: namePokemon,
+                type: pokemonType,
+                color: getColorOnTypes(pokemonType),
+                imgUri: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`
+            }
+        })
+        if (pokemonDataMap.length > 0) {
+            yield put(setPokemonList({
+                data: pokemonDataMap,
+                offset: payload?.offset
+            }))
+        }
+    }
+
+    yield put(loadPokemonList(false))
   } catch (responseFailed) {
     //handle error
   }
